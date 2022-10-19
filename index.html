@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.png">
+<title>Scratch Mock-Up Creator</title>
+<style>
+html, body {
+  height: 100%;
+}
+
+body {
+  background: #949494;
+  margin-top: 55px;
+  margin-left: 20px;
+  color: #5a5c72;
+  font-family: Helvetica;
+  overflow: hidden;
+}
+
+.nav {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-weight: bold;
+  color: white;
+  z-index: 999;
+  padding-top: 5px;
+  box-shadow: 1px 3px 7px 0px rgb(0 0 0 / 25%);
+  background-color: #394450; /* #4d97ff; */
+  width: 100%;
+  height: 35px;
+  text-align: center;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.nav a:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sidenav {
+  bottom: 0;
+  height: auto;
+  width: calc(160px - 15px);
+  text-align: left !important;
+  padding: 15px;
+}
+
+.sidenav select {
+  width: 90%;
+  margin-top: 10px;
+}
+
+.sidenav a {
+  text-decoration: underline;
+  margin-top: 5px;
+  display: block;
+}
+
+select {
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.2); /* #3b7bd4; */
+  height: 30px;
+  margin-left: 5px;
+  border-radius: 5px;
+  padding: 5px;
+  transition: 0.2s;
+  width: 20%;
+  color: white;
+}
+
+option {
+  background: #394450;
+}
+
+option:disabled {
+  display: none;
+  /* color: #e3e3e3; */
+}
+
+.canvas {
+  background: #f7f7f7;
+  width: 80%;
+  height: 70%;
+  margin-left: 200px;
+  border: 4px solid lightgray;
+  margin-top: 60px;
+  position: relative;
+  overflow: hidden;
+}
+  
+input {
+  color: #fff;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, .1);
+  height: 30px;
+  margin-left: 5px;
+  border-radius: 5px;
+  padding: 0 5px;
+  padding-left: 8px;
+  transition: 0.2s;
+  width: 10%;
+}
+
+input::placeholder {
+  color: white;
+}
+
+input:focus {
+  background-color: rgba(0, 0, 0, .2);
+}
+
+.footer {
+  background: #e7e7e7;
+  position: fixed;
+  bottom: 0;
+  left: 180px;
+  right: 0;
+  font-size: 0.84rem;
+  padding: 20px 120px;
+  border-radius: 20px 20px 0 0;
+  z-index: 999;
+}
+</style>
+</head>
+<body>
+<div class="nav">
+<a onclick="newElement(1)">Text</a>
+<a onclick="newElement(2)">Header</a>
+<a onclick="newElement(3)">Image</a>
+<a onclick="undo()" style="border-left:2px solid rgba(255, 255, 255, 0.8);padding-left:10px;">Undo</a>
+<input placeholder="Mock-Up Name..." value="Untitled-1" />
+<!-- <input onkeyup="this.value='';alert('This textbox is for decorative purposes only!')" placeholder="Search"> -->
+<a onclick="location.reload()">Clear Canvas</a>
+<!-- bleugh too buggy <a onclick="image()">Save as Image</a> -->
+<a onclick="alert('Click on Text, Header, Image, or any element from the drop-down to spawn an element on the canvas. You can drag and drop it anywhere, just like the Scratch interface. To modify its text, right-click it. If you want to remove an element, double click on it. (NOTE: The undo button only works for element deletions. If you move something accidentally, don\'t expect the undo button to reset its position!) If you would like to send an element to the bottom layer, middle-click it. If you want to send it to the top layer, well, dragging any element will automatically bring it to the top layer :p. If you want to resize your image, you\'ll notice that right-clicking will only change the url - so, how do you change the width? Just shift+click on it!\nOnce you have your final product, screenshot - crop - then post. Have fun!!\n\nBTW Found a bug? Need support? Have any questions? Contact me using the link on the footer ;)')">Need Help?</a>
+</div>
+<div class="nav sidenav">
+<img src="/icon.png" style="
+    width: 90px;
+    vertical-align: middle;
+    margin-right: 10px;
+    filter: grayscale(0.7);
+">
+<span style="font-size: 20px; margin-top: 15px; display: block;">Elements</span>
+<select onchange="newElement(this.value)">
+<option value="1" disabled="" selected="">Buttons</option>
+<option value="27">Button</option>
+<option value="28">Disabled Button</option>
+</select>
+<br />
+<select onchange="newElement(this.value)">
+<option value="1" disabled="" selected="">Formatted Text</option>
+<option value="10">Double Header</option>
+<option value="11">White Double Header</option>
+<option value="8">White Header</option>
+<option value="9">White Text</option>
+<option disabled="">-- Underlined --</option>
+<option value="20">Underlined Header</option>
+<option value="21">Underlined Text</option>
+<option value="18">Unvisited Link</option>
+<option value="19">Visited Link</option>
+<option value="16">Separator Line</option>
+</select>
+<br />
+<select onchange="newElement(this.value)">
+<option value="1" disabled selected>Blocks</option>
+<option value="4">Square Block</option>
+<option value="15">White Square Block</option>
+<option value="5">Wide Block</option>
+<option value="22">Tall Block</option>
+<option value="6">Full-Width Block</option>
+<option value="23">Full-Height Block</option>
+<option value="17">Wide Border Block</option>
+<option value="24">Tall Border Block</option>
+</select>
+<br />
+<select onchange="newElement(this.value)">
+<option value="1" disabled selected>Circles</option>
+<option value="7">Circle</option>
+<option value="14">Mini Circle</option>
+<option value="12">Yellow Circle</option>
+<option value="13">Mini Yellow Circle</option>
+<option value="30">White Circle</option>
+<option value="31">Mini White Circle</option>
+<option value="32">Big Gray Circle</option>
+<option value="33">Gray Circle</option>
+<option value="34">Small Gray Circle</option>
+<option value="35">Mini Gray Circle</option>
+</select>
+<br />
+<select onchange="newElement(this.value)">
+<option value="1" disabled="" selected="">Misc</option>
+<option value="3.1">Rounded Image</option>
+<option value="25">Short Separator Line</option>
+<option value="26">Shorter Separator Line</option>
+<option value="36">Vertical Separator Line</option>
+<option value="37">Short Vertical Separator Line</option>
+</select>
+<span style="font-size: 20px; margin-top: 15px; display: block;">Profile Pics</span>
+<a onclick="getImage()">Profile Picture</a>
+<a onclick="newElement(3.2)">Rounded PFP</a>
+</div>
+<div class="canvas"></div>
+<div class="footer">Scratch Mock-Up Creator is not affiliated, associated, or in any way officially connected with the Scratch website or the organizations that maintain it. Scratch is a project of the Scratch Foundation, in collaboration with the Lifelong Kindergarten Group at the MIT Media Lab. It is available for free at https://scratch.mit.edu
+<br />
+Contact: <a href='https://scratch.mit.edu/users/yes-i-am-lanky/'>@yes-i-am-lanky</a> | <a href='https://scratch.mit.edu/discuss/topic/636063/'>Official Discussion Topic</a></div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script>
+      document.onpaste = (e) => {
+      const eventData = window.clipboardData || e.clipboardData ;
+      const theFile = eventData.files[ 0 ];
+        newElement(3, URL.createObjectURL(theFile))
+    };
+function resetSelects() {
+  document.querySelectorAll('select').forEach(a => a.value=1);
+}
+setTimeout(function(){resetSelects()}, 100)
+function initAnimation() {
+document.body.insertAdjacentHTML("beforeEnd", `<div id="anim" style="background: #4d97ff; position: absolute; top: 0; bottom: 0; left: 0; right: 0; padding: 10%; color: white; font-size: 40px; opacity: 1; transition: 1s; z-index: 1000; text-align: center;">Scratch Mock-Up Creator</div>`);
+   setTimeout(function(){ document.querySelector('#anim').style.opacity = '0';}, 1000)
+   setTimeout(function(){ document.querySelector('#anim').remove();}, 2000)
+}
+function getImage(type=3) {
+  fetch('https://proxy.cors.sh/https://api.scratch.mit.edu/users/' + prompt('Insert username here...'))
+    .then(r=>r.json())
+    .then(data=>{
+      newElement(type, data.profile.images["90x90"]);
+    })
+    .catch(e=>alert('Error!'))
+}
+  initAnimation() 
+let disallowLeaving = false;
+
+function image() {
+disallowLeaving = false;
+  html2canvas(document.querySelector(".canvas")).then(canvas => {
+    let downloadLink = document.createElement('a');
+    downloadLink.setAttribute('download', 'MockUp.png');
+    canvas.toBlob(function(blob) {
+      let url = URL.createObjectURL(blob);
+      downloadLink.setAttribute('href', url);
+      downloadLink.click();
+    });
+disallowLeaving = true;
+  });
+}
+let zindex = 1;
+window.addEventListener('beforeunload', (event) => {
+if (disallowLeaving) {
+  event.preventDefault();
+  event.returnValue = '';
+  }
+});
+
+  let deleted = {
+    id: 0,
+    top: 0
+  }
+
+  function del(el) {
+      deleted = {
+    id: el.id,
+    top: el.style.top
+  }
+      el.style.top = "-100000px";
+  }
+  function undo() {
+    if (deleted.id == 0) return alert('Nothing to undo!');
+    document.getElementById(deleted.id).style.top = deleted.top;
+    deleted = {
+      id: 0,
+      top: 0
+    }
+  }
+
+function newElement(type, imgUrl) {
+resetSelects()
+  newId = Math.floor(Math.random() * 200000).toString(36);
+  v = ''
+  if (type == 2) v = 'font-size: 24px;font-weight: bold;';
+  if (type == 4) v = 'background: #4d97ff; width: 100px; height: 100px; color: transparent; cursor: move;';
+  if (type == 5) v = 'background: #4d97ff; width: 200px; height: 100px; color: transparent; cursor: move;';
+  if (type == 6) v = 'background: #4d97ff; width: 100%; height: 100px; color: transparent; cursor: move;';
+  if (type == 7) v = 'background: #4d97ff; width: 100px; height: 100px; border-radius: 50%; color: transparent; cursor: move;';
+  if (type == 8) v = 'font-size: 24px;font-weight: bold; color: white !important;';
+  if (type == 9) v = 'color: white !important;text-shadow: 0px 0px 7px rgb(0 0 0 / 40%);text-shadow: 0px 0px 7px rgb(0 0 0 / 40%);';
+  if (type == 10) v = 'font-size: 42px;font-weight: bold;';
+  if (type == 11) v = 'font-size: 42px;font-weight: bold; color: white !important;text-shadow: 0px 0px 7px rgb(0 0 0 / 40%);';
+  if (type == 12) v = 'background: #ffab1a; width: 100px; height: 100px; border-radius: 50%; color: transparent; cursor: move;';
+  if (type == 13) v = 'background: #ffab1a; width: 30px; height: 30px; border-radius: 50%; color: transparent; cursor: move;';
+  if (type == 14) v = 'background: #4d97ff; width: 30px; height: 30px; border-radius: 50%; color: transparent; cursor: move;';
+  if (type == 15) v = 'background: white; width: 100px; height: 100px; color: transparent; cursor: move;';
+  if (type == 16) v = 'background: lightgray; width: 100%; height: 2.5px; color: transparent; cursor: move;';
+  if (type == 17) v = 'border: 2px solid #e7e7e7; border-radius: 5px; width: 400px; height: 30px; color: transparent; cursor: move;';
+  if (type == 18) v = 'color: blue; text-decoration: underline;';
+  if (type == 19) v = 'color: purple; text-decoration: underline;';
+  if (type == 20) v = 'font-size: 24px;font-weight: bold; text-decoration: underline;';
+  if (type == 21) v = 'text-decoration: underline;';
+  if (type == 22) v = 'background: #4d97ff; width: 100px; height: 300px; color: transparent; cursor: move;';
+  if (type == 23) v = 'background: #4d97ff; width: 100px; height: 100vh; color: transparent; cursor: move;';
+  if (type == 24) v = 'border: 2px solid lightgray; width: 300px; height: 100vh; color: transparent; cursor: move;';
+  if (type == 25) v = 'background: lightgray; width: 250px; height: 2.5px; color: transparent; cursor: move;';
+  if (type == 26) v = 'background: lightgray; width: 100px; height: 2.5px; color: transparent; cursor: move;';
+  if (type == 27) v = 'border-radius: 10px;background-color: rgb(77, 151, 255);color: white;cursor: pointer;padding: 14px;font-weight:bold;';
+  if (type == 28) v = 'border-radius: 10px;background-color: lightgray;cursor: not-allowed;padding: 14px;font-weight:bold;';
+  if (type == 29) v = 'width: 80%;color: transparent;cursor: move;';
+  if (type == 29.1) v = 'width: 40%;color: transparent;cursor: move;';
+  if (type == 30) v = 'background: white; width: 100px; height: 100px; border-radius: 50%; color: transparent; cursor: move;';
+  if (type == 31) v = 'background: white; width: 30px; height: 30px; border-radius: 50%; color: transparent; cursor: move;';
+  /* 
+<option value="32">Big Gray Circle</option>
+<option value="33">Gray Circle</option>
+<option value="34">Small Gray Circle</option>
+<option value="35">Mini Gray Circle</option> */
+  if (type == 32) v = 'background: #e7e7e7; width: 160px; height: 160px; border-radius: 50%; color: transparent; cursor: move;';
+  if (type == 33) v = 'background: #e7e7e7; width: 100px; height: 100px; border-radius: 50%; color: transparent; cursor: move;';
+  if (type == 34) v = 'background: #e7e7e7; width: 50px; height: 50px; border-radius: 50%; color: transparent; cursor: move;';
+  if (type == 35) v = 'background: #e7e7e7; width: 30px; height: 30px; border-radius: 50%; color: transparent; cursor: move;';
+  if (type == 36) v = 'background: lightgray; width: 2.5px; height: 50px; color: transparent; cursor: move;';
+  if (type == 37) v = 'background: lightgray; width: 2.5px; height: 20px; color: transparent; cursor: move;';
+  if (type == 3.2) return getImage(3.1);
+  zindex++;
+  v = "z-index:"+ zindex +";"+v
+  if (type == 3 || type == 3.1) {
+    if(!imgUrl) imgUrl = prompt('Insert image URL...');
+    width = prompt('Insert your image width (in pixels)').replace('px', '');
+    if (!parseFloat(width) && parseFloat(width) != 0) {
+      alert('Invalid width, reset to 60 px.');
+      width = 60;
+    }
+    f = '';
+    if (type==3.1) f = "border-radius:50%"
+  document.querySelector('.canvas').insertAdjacentHTML("afterBegin", "<img style='position: absolute; width:"+width+"px;"+f+"' ondblclick='del(this)' id='" + newId + "' src='"+imgUrl+"' />");
+  }else if (type==29 || type == 29.1) {
+    document.querySelector('.canvas').insertAdjacentHTML("afterBegin", `
+<div style="position: absolute;${v}" ondblclick="del(this)" id="${newId}">
+<div style='background: #f1f1f1;border: 1px solid lightgray;width: 100%;height: 25px;border-radius: 10px 10px 0 0;'></div><div style='background: white;border: 1px solid lightgray;width: 100%;height: 100px;'></div>
+</div>`);
+  }else{
+  document.querySelector('.canvas').insertAdjacentHTML("afterBegin", "<div style='position: absolute;"+v+"' ondblclick='del(this)' id='" + newId + "'>Drag to move, right-click to edit.</div>");
+  }
+  
+  if (type == 3 || type == 3.1) {
+    document.getElementById(newId).addEventListener("click",
+  function(e) {
+    if (e.shiftKey) {
+    width = prompt('Insert your image width (in pixels)').replace('px', '');
+    if (!parseFloat(width) && parseFloat(width) != 0) {
+      alert('nvalid width provided! Your image was not modified.');
+    }
+    e.target.style.width = width;
+    }
+  },
+  false);
+  document.getElementById(newId).addEventListener('contextmenu', function(ev) {
+      ev.preventDefault();
+      newtext = prompt('New URL here...', ev.target.src);
+      if (newtext.trim() != '') ev.target.setAttribute('src', newtext);
+      return false;
+  }, false);
+  }else{document.getElementById(newId).addEventListener('contextmenu', function(ev) {
+      ev.preventDefault();
+
+    if (ev.target.style.color != 'transparent') {
+      
+      newtext = prompt('Insert new text here...', ev.target.innerText);
+      if (newtext.trim() != '') ev.target.innerText = newtext;
+    }return false;
+  }, false);
+  }
+
+  if (document.getElementById(newId).style.color == 'transparent' && !(type == 29 || type == 29.1))document.getElementById(newId).innerText ='';
+  
+  document.getElementById(newId).addEventListener('auxclick', function(e) {
+  if (e.button == 1) {
+    e.target.style.zIndex = 0;
+  }
+})
+  
+  dragElement(document.getElementById(newId));
+disallowLeaving = true;
+}
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id)) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+    function dragMouseDown(e) {
+    zindex++;
+    elmnt.style.zIndex = zindex;
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+  elmnt.style.top = snap(elmnt.style.top.slice(0,-2)) + "px";
+    elmnt.style.left = snap(elmnt.style.left.slice(0,-2)) + "px";
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+function snap(e) {
+  return Math.round(e / 5) * 5;
+}
+</script>
+</body>
+</html>
