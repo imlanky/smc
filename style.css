@@ -91,6 +91,7 @@ option:disabled {
   margin-top: 60px;
   position: relative;
   overflow: hidden;
+  box-shadow: 6px 4px 15px 3px #00000059;
 }
   
 input {

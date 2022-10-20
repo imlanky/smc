@@ -3,7 +3,7 @@
 <head>
 <link rel="icon" type="image/x-icon" href="/media/favicon.png">
 <link rel="stylesheet" href="/style.css" />
-<title>Scratch Mock-Up Creator</title>
+<title>Scribble - Mock-Up Creator</title>
 </head>
 <body>
 <div class="nav">
@@ -19,7 +19,7 @@
 </div>
 <div class="nav sidenav">
 <img src="/media/icon.png" style="
-    width: 90px;
+    width: 110px;
     vertical-align: middle;
     margin-right: 10px;
     filter: grayscale(0.7);
@@ -83,13 +83,36 @@
 <a onclick="getImage()">Profile Picture</a>
 <a onclick="newElement(3.2)">Rounded PFP</a>
 </div>
+<span style="
+    position: absolute;
+    top: 45px;
+    right: 5px;
+    font-size: 25px;
+    opacity: 0.4;
+  z-index: 10000;
+" id="zoom">x1</span>
 <div class="canvas"></div>
-<div class="footer">Scratch Mock-Up Creator is not affiliated, associated, or in any way officially connected with the Scratch website or the organizations that maintain it. Scratch is a project of the Scratch Foundation, in collaboration with the Lifelong Kindergarten Group at the MIT Media Lab. It is available for free at https://scratch.mit.edu
+<div class="footer">Scribble - Mock-Up Creator is not affiliated, associated, or in any way officially connected with the Scratch website or the organizations that maintain it. Scratch is a project of the Scratch Foundation, in collaboration with the Lifelong Kindergarten Group at the MIT Media Lab. It is available for free at https://scratch.mit.edu
 <br />
 Contact: <a href='https://scratch.mit.edu/users/yes-i-am-lanky/'>@yes-i-am-lanky</a> | <a href='https://scratch.mit.edu/discuss/topic/636063/'>Official Discussion Topic</a> | <a href='https://github.com/imlanky/smc/'> Official Github Repo</a></div>
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <script>
+window.addEventListener('wheel', (event) => {
+  if (event.target == document.querySelector('.canvas') || event.target == document.body) {
+    target=document.querySelector('.canvas');
+      transform = parseFloat(target.style.transform.slice(6,-1));
+      if (!transform && transform != 0) transform = 1;
+    if(event.deltaY < 0) {
+        movePos = transform+0.04;
+    }else{
+        movePos = transform-0.04;
+    }
+     if(movePos > 0.2 && movePos < 2.6) target.style.transform = 'scale('+movePos+')';
+
+    document.querySelector('#zoom').innerText = 'x'+movePos.toString().slice(0,4);
+  }
+});
       document.onpaste = (e) => {
       const eventData = window.clipboardData || e.clipboardData ;
       const theFile = eventData.files[ 0 ];
@@ -100,7 +123,7 @@ function resetSelects() {
 }
 setTimeout(function(){resetSelects()}, 100)
 function initAnimation() {
-document.body.insertAdjacentHTML("beforeEnd", `<div id="anim" style="background: #4d97ff; position: absolute; top: 0; bottom: 0; left: 0; right: 0; padding: 10%; color: white; font-size: 40px; opacity: 1; transition: 1s; z-index: 1000; text-align: center;">Scratch Mock-Up Creator</div>`);
+document.body.insertAdjacentHTML("beforeEnd", `<div id="anim" style="background: #4d97ff; position: absolute; top: 0; bottom: 0; left: 0; right: 0; padding: 10%; color: white; font-size: 40px; opacity: 1; transition: 1s; z-index: 10000000; text-align: center;">Scribble Mock-Up Creator</div>`);
    setTimeout(function(){ document.querySelector('#anim').style.opacity = '0';}, 1000)
    setTimeout(function(){ document.querySelector('#anim').remove();}, 2000)
 }
