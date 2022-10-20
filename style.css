@@ -21,7 +21,7 @@ body {
   z-index: 999;
   padding-top: 5px;
   box-shadow: 1px 3px 7px 0px rgb(0 0 0 / 25%);
-  background-color: #394450; /* #4d97ff; */
+  background-color: #4d97ff;
   width: 100%;
   height: 35px;
   text-align: center;
@@ -43,6 +43,9 @@ body {
   height: auto;
   width: calc(160px - 15px);
   text-align: left !important;
+  background-color: #394450;
+  top: 40px;
+  z-index: 998;
   padding: 15px;
 }
 
